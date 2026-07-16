@@ -152,19 +152,17 @@
 
     <div class="warn">⚠️ En 5 axes, ne jamais appeler un label d'inclinaison sans avoir annulé le plan précédent — le TNC 426 peut calculer une trajectoire inattendue si un plan est déjà actif.</div>
 
-    <h2>Labels de pièce — convention de numérotation</h2>
+    <h2>Labels de pièce — numérotation observée en production</h2>
 
-    <p>Les labels spécifiques à la pièce (contours, positions, cycles) sont numérotés après les labels d'infrastructure. Une convention courante :</p>
+    <p>Les labels spécifiques à la pièce sont numérotés librement, en dehors de la plage réservée à l'infrastructure (LBL 90–108). Ce qui est constant dans la pratique :</p>
 
     <ul>
-      <li><strong>LBL 1–9</strong> : contours géométriques principaux</li>
-      <li><strong>LBL 10–29</strong> : positions et cycles d'ébauche</li>
-      <li><strong>LBL 30–39</strong> : contours et cycles de finition</li>
-      <li><strong>LBL 25</strong> : réservé au surfaçage (par convention)</li>
-      <li><strong>LBL 90–108</strong> : infrastructure (dégagements, plans)</li>
+      <li><strong>LBL 25</strong> : systématiquement réservé au surfaçage</li>
+      <li><strong>LBL 26–35</strong> : opérations de contour et de découpe Z (ébauche et finition)</li>
+      <li><strong>LBL 90–108</strong> : exclusivement réservés à l'infrastructure (dégagements, annulation plan, inclinaisons)</li>
     </ul>
 
-    <div class="note">💡 La numérotation exacte n'est pas figée — l'essentiel est d'avoir une convention cohérente et documentée, appliquée sur tous les programmes de l'atelier.</div>
+    <div class="note">💡 Ce qui compte c'est que les labels d'infrastructure (90–108) ne soient jamais utilisés pour des opérations pièce — la confusion entre les deux provoque des comportements imprévisibles.</div>
 
   </div>
 

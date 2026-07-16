@@ -17,21 +17,9 @@
     <p>Une bibliothèque efficace est divisée en deux couches distinctes :</p>
 
     <h3>Couche 1 — Macros machine-spécifiques (MACRO000–MACRO119)</h3>
-    <p>Ces macros sont organisées par groupes fonctionnels, spécifiques à la DMU 70 / TNC 426. Elles contiennent les instructions, cycles et conventions propres à cette configuration machine.</p>
+    <p>Ces macros sont organisées en 13 groupes fonctionnels, spécifiques à la DMU 70. Chaque groupe correspond à une famille d'opérations ou d'instructions. Le détail exact des groupes est défini par le programmeur selon ses besoins — ce qui est important c'est la cohérence interne : une macro dans un groupe donné fait toujours la même catégorie de chose.</p>
 
-    <table class="compare-table">
-      <tr><th>Groupe</th><th>Plage</th><th>Contenu</th></tr>
-      <tr><td>Infrastructure programme</td><td>000–009</td><td>En-tête, BLK FORM, CYCL 247, fin de programme</td></tr>
-      <tr><td>Dégagements 5 axes</td><td>010–019</td><td>LBL 90, LBL 91, LBL 92</td></tr>
-      <tr><td>Annulation plan</td><td>020–029</td><td>LBL 100</td></tr>
-      <tr><td>Inclinaisons standard</td><td>030–049</td><td>LBL 101–108 (B-90, B+90, A+90, A-90, etc.)</td></tr>
-      <tr><td>Cycles de perçage</td><td>050–059</td><td>CYCL 200, 207, 208, 201</td></tr>
-      <tr><td>Cycles de fraisage</td><td>060–069</td><td>CYCL 22, 25, 5</td></tr>
-      <tr><td>Surfaces et contours</td><td>070–079</td><td>LBL surfaçage, LBL contour générique</td></tr>
-      <tr><td>IMAGE MIROIR</td><td>080–089</td><td>Activation/annulation CYCL 8 pour OP2</td></tr>
-      <tr><td>PREPROG DMU70</td><td>090–099</td><td>Template programme complet DMU70</td></tr>
-      <tr><td>Divers DMU70</td><td>100–119</td><td>Opérations spécifiques, Q-paramètres initiaux</td></tr>
-    </table>
+    <p>Parmi les macros individuelles (MACRO232–MACRO240), chacune encode une opération spécifique extraite du PREPROG DMU70 — elles peuvent être appelées individuellement pour construire un programme par assemblage de blocs.</p>
 
     <h3>Couche 2 — Macros génériques (MACRO120–MACRO231)</h3>
     <p>Macros non liées à une machine spécifique — calculs, conventions ISO, blocs de commentaires, utilitaires.</p>
