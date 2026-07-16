@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Macros CimcoEdit – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-programmation.html">Programmation</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-programmation.html">Programmation</a><span>›</span>Macros CimcoEdit</div>
+  <div class="article-header">
+    <div class="category-badge">Programmation Heidenhain TNC 426</div>
+    <h1>Macros CimcoEdit : organisation et passage de paramètres</h1>
+    <div class="meta"><span>⏱ 8 min de lecture</span><span>🏷 CimcoEdit · Macros · Q-paramètres · PREPROG</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>CimcoEdit est un éditeur CN qui permet de créer des macros — des blocs de code réutilisables avec des champs variables. Bien organisées, ces macros permettent de générer un programme complet en quelques minutes. Mal organisées, elles créent plus de confusion qu'elles n'en résolvent.</p>
+
+    <h2>Architecture d'une bibliothèque de macros</h2>
+    <p>Une bibliothèque efficace est divisée en deux couches distinctes :</p>
+
+    <h3>Couche 1 — Macros machine-spécifiques (MACRO000–MACRO119)</h3>
+    <p>Ces macros sont organisées par groupes fonctionnels, spécifiques à la DMU 70 / TNC 426. Elles contiennent les instructions, cycles et conventions propres à cette configuration machine.</p>
+
+    <table class="compare-table">
+      <tr><th>Groupe</th><th>Plage</th><th>Contenu</th></tr>
+      <tr><td>Infrastructure programme</td><td>000–009</td><td>En-tête, BLK FORM, CYCL 247, fin de programme</td></tr>
+      <tr><td>Dégagements 5 axes</td><td>010–019</td><td>LBL 90, LBL 91, LBL 92</td></tr>
+      <tr><td>Annulation plan</td><td>020–029</td><td>LBL 100</td></tr>
+      <tr><td>Inclinaisons standard</td><td>030–049</td><td>LBL 101–108 (B-90, B+90, A+90, A-90, etc.)</td></tr>
+      <tr><td>Cycles de perçage</td><td>050–059</td><td>CYCL 200, 207, 208, 201</td></tr>
+      <tr><td>Cycles de fraisage</td><td>060–069</td><td>CYCL 22, 25, 5</td></tr>
+      <tr><td>Surfaces et contours</td><td>070–079</td><td>LBL surfaçage, LBL contour générique</td></tr>
+      <tr><td>IMAGE MIROIR</td><td>080–089</td><td>Activation/annulation CYCL 8 pour OP2</td></tr>
+      <tr><td>PREPROG DMU70</td><td>090–099</td><td>Template programme complet DMU70</td></tr>
+      <tr><td>Divers DMU70</td><td>100–119</td><td>Opérations spécifiques, Q-paramètres initiaux</td></tr>
+    </table>
+
+    <h3>Couche 2 — Macros génériques (MACRO120–MACRO231)</h3>
+    <p>Macros non liées à une machine spécifique — calculs, conventions ISO, blocs de commentaires, utilitaires.</p>
+
+    <h2>Variables dans les macros CimcoEdit</h2>
+    <p>Les variables dans une macro CimcoEdit sont <strong>locales à cette macro</strong>. Une variable <code>$1</code> dans la macro A et une variable <code>$1</code> dans la macro B sont deux variables indépendantes — elles ne se partagent pas.</p>
+
+    <p>Pour passer une valeur d'une macro à une autre, il faut utiliser le <strong>passage de paramètres par argument</strong> :</p>
+
+    <pre><span class="cm">; Appel de la macro avec arguments :</span>
+<span class="cm">; "insertmacro CYCL_PERCAGE 2 -15 100 0.6 0 0 50 0"</span>
+<span class="cm">; Les arguments $1 à $8 sont passés dans l'ordre</span>
+
+<span class="cm">; Contenu de la macro CYCL_PERCAGE :</span>
+CYCL DEF 200 PERCAGE ~
+  Q200=$1    ;DISTANCE D'APPROCHE
+  Q201=$2    ;PROFONDEUR
+  Q206=$3    ;AVANCE PLONGEE
+  Q202=$4    ;PROFONDEUR DE PASSE
+  Q210=$5    ;TEMPO EN HAUT
+  Q203=$6    ;COORD SURFACE
+  Q204=$7    ;SAUT DE BRIDE
+  Q211=$8    ;TEMPO AU FOND</pre>
+
+    <div class="note">💡 Cette approche permet de définir Q200, Q203, Q204 une seule fois dans la macro appelante et de les passer à toutes les macros de cycles — sans les retaper à chaque cycle.</div>
+
+    <h2>PREPROG DMU70 — le template de programme complet</h2>
+    <p>La macro PREPROG DMU70 génère le squelette complet d'un programme Heidenhain pour la DMU 70. Elle contient :</p>
+    <ul>
+      <li>L'en-tête complet avec tous les champs à remplir</li>
+      <li>BLK FORM avec champs variables pour les dimensions</li>
+      <li>CYCL 247 avec numéro de point de référence</li>
+      <li>L'initialisation des axes (C+0 B+0 M5 M9)</li>
+      <li>Les labels d'infrastructure (LBL 90, 91, 92, 100, 101–108)</li>
+      <li>Le STOP M2 de fin de programme</li>
+      <li>La zone "labels de pièce" vide, prête à recevoir le contenu spécifique</li>
+    </ul>
+
+    <p>En partant de PREPROG DMU70, on dispose d'un programme structurellement complet et conforme à la convention. Il ne reste qu'à ajouter les opérations spécifiques à la pièce.</p>
+
+    <h2>La directive # dans CimcoEdit</h2>
+    <p>Dans une macro CimcoEdit, le préfixe <code>#</code> est une directive d'écriture — il écrit le texte qui suit directement dans le fichier NC, sans le traiter comme une instruction macro. Les numéros de bloc sont ajoutés automatiquement par CimcoEdit et ne peuvent pas être modifiés manuellement (ce qui est correct — sur TNC 426, les numéros de bloc sont des étiquettes de navigation, pas des instructions fonctionnelles).</p>
+
+  </div>
+  <div class="article-nav">
+    <a href="securite-3axes-5axes.html">← Sécurité 3 axes vs 5 axes</a>
+    <a href="../categorie-strategie.html">Stratégies d'usinage →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

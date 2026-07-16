@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Commentaires et documentation – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-programmation.html">Programmation</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-programmation.html">Programmation</a><span>›</span>Commentaires et documentation</div>
+  <div class="article-header">
+    <div class="category-badge">Programmation Heidenhain TNC 426</div>
+    <h1>Commentaires et documentation dans un programme CN</h1>
+    <div class="meta"><span>⏱ 6 min de lecture</span><span>🏷 TNC 426 · Documentation · Lisibilité · M1</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>Un programme commenté prend quelques minutes de plus à rédiger. Un programme non commenté peut coûter des heures à relire, reprendre ou corriger. Le ratio est clairement favorable à la documentation.</p>
+
+    <h2>Commenter les CALL LBL — la règle la plus importante</h2>
+    <p>Chaque appel de label dans le corps principal doit indiquer ce que fait ce label. Le numéro est déjà visible — le commentaire doit apporter une information que le numéro ne donne pas.</p>
+
+    <table class="compare-table">
+      <tr><th>Sans commentaire</th><th>Avec commentaire</th></tr>
+      <tr><td><code>CALL LBL 103</code></td><td><code>CALL LBL 103 ; INCLINAISON PLAN : B-90, DEC Y-16.5 Z-20</code></td></tr>
+      <tr><td><code>CALL LBL 90</code></td><td><code>CALL LBL 90 ; ANNULATION PLAN, DEGAGEMENTS Z M91 M9</code></td></tr>
+      <tr><td><code>CALL LBL 28</code></td><td><code>CALL LBL 28 ; X+76.107 Y-36, Z+2 M13 M7</code></td></tr>
+      <tr><td><code>CALL LBL 31</code></td><td><code>CALL LBL 31 ; Contournage finition plan B+0 C+0</code></td></tr>
+    </table>
+
+    <p>Le commentaire sur les labels d'inclinaison doit inclure l'angle B ET les décalages DEC — ce sont les paramètres que l'opérateur veut connaître sans aller chercher dans la définition du label.</p>
+
+    <h2>M1 avec indication de la cote à contrôler</h2>
+    <p>Le M1 (arrêt optionnel) est l'outil de contrôle intermédiaire du programmeur. Un M1 sans commentaire ne dit pas à l'opérateur ce qu'il doit vérifier. Un M1 commenté lui donne la cote et la tolérance directement sur l'écran.</p>
+
+    <pre><span class="kw">L</span> M1 <span class="cm">; CONTROLE D26H6(0,+0.013)</span>
+<span class="kw">L</span> M1 <span class="cm">; CONTROLE D15H7(0,+0.018)</span>
+<span class="kw">L</span> M1 <span class="cm">; CONTROLE profondeur rainure 2H7</span></pre>
+
+    <p>L'opérateur sait exactement pourquoi il s'arrête et quel instrument sortir. Pas d'appel, pas de perte de temps, pas de risque de reprendre sans avoir contrôlé.</p>
+
+    <div class="ok">✅ La convention : M1 = toujours commenté avec la cote critique à vérifier. Si aucune cote n'est à vérifier, pas de M1.</div>
+
+    <h2>Numérotation et titrage des opérations</h2>
+    <p>Chaque opération dans le corps principal doit avoir un titre qui identifie l'outil, la désignation de l'opération, et la cote usinée si applicable.</p>
+
+    <pre><span class="cm">* -</span>
+<span class="cm">*   - OPERATION 15 : D26H6(0,+0.013)</span>
+<span class="cm">* - Fraise carbure D10 T24</span>
+<span class="kw">TOOL CALL</span> 24 Z S3820 F764 DL+0 DR+0.4</pre>
+
+    <p>La numérotation séquentielle permet de s'y retrouver rapidement. Si un problème survient sur la pièce, l'opérateur peut identifier immédiatement à quelle opération correspond l'anomalie.</p>
+
+    <h2>DL et DR : documenter les corrections en production</h2>
+    <p>Les DL (correction de longueur) et DR (correction de rayon) utilisés en production doivent être sauvegardés dans le programme final. La prochaine série repart alors de valeurs éprouvées.</p>
+
+    <pre><span class="kw">TOOL CALL</span> 24 Z S3820 F764 DL+0 DR-0.004   <span class="cm">; DR validé série du 15/07/2026</span>
+<span class="kw">TOOL CALL</span> 9 Z S7000 F560 DL+0.15 DR-0.0395 <span class="cm">; DL+DR mesurés sur premiere pièce</span></pre>
+
+    <div class="note">💡 Un programme avec ses DL/DR réels est un programme qui a produit une pièce bonne. C'est la différence entre un programme de démarrage et un programme de série validé.</div>
+
+    <h2>Commenter les définitions de labels</h2>
+    <p>Chaque définition de label doit avoir son titre en commentaire juste avant :</p>
+
+    <pre><span class="cm">* - LBL 103, INCLINAISON PLAN : B-90, DEC Y-16.5 Z-20</span>
+<span class="kw">LBL</span> 103
+<span class="kw">CYCL DEF</span> 7.0 POINT ZERO
+<span class="cm">; ...</span></pre>
+
+    <p>Ce titre sera reproduit dans le commentaire des CALL LBL — cohérence garantie entre la définition et l'appel.</p>
+
+  </div>
+  <div class="article-nav">
+    <a href="architecture-lbl.html">← Architecture LBL</a>
+    <a href="passes-z-reprise-incident.html">Passes Z et reprise →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

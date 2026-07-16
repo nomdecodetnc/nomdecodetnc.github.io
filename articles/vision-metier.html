@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Vision du métier – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-realite.html">Réalité terrain</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-realite.html">Réalité terrain</a><span>›</span>Vision du métier</div>
+  <div class="article-header">
+    <div class="category-badge">Réalité terrain</div>
+    <h1>Ma vision du métier de technicien d'usinage</h1>
+    <div class="meta"><span>⏱ 10 min de lecture</span><span>🏷 Méthodes · Programmation · Valeur · Production</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>Après 30 ans de pratique sur différentes machines et commandes — Heidenhain, Haas ISO, Mori Seiki — j'ai une vision claire de ce que devrait être le métier de technicien d'usinage et de la valeur qu'il peut apporter. Cette vision se heurte souvent à la réalité des ateliers, où "la pièce sort" est considéré comme le seul critère de réussite.</p>
+
+    <h2>Un programme n'est pas un programme</h2>
+    <p>Il y a deux types de programmes CN. Le premier fait tourner la machine et produit une pièce. Le second fait ça, mais aussi documente ce qu'il fait, anticipe les incidents, est compréhensible par n'importe quel opérateur, est optimisé pour minimiser le temps machine et l'usure, et sera encore exploitable dans 5 ans.</p>
+
+    <p>La différence entre les deux n'est pas visible sur la pièce du jour. Elle devient visible :</p>
+    <ul>
+      <li>Quand l'opérateur qui a fait le programme est absent</li>
+      <li>Quand un incident machine se produit à mi-opération</li>
+      <li>Quand la pièce revient en commande 2 ans plus tard</li>
+      <li>Quand quelqu'un doit vérifier si le programme correspond à la bonne révision du plan</li>
+      <li>Quand on veut calculer le gain de temps entre l'ancienne et la nouvelle méthode</li>
+    </ul>
+
+    <h2>La programmation comme document de fabrication</h2>
+    <p>Un programme bien fait est un document de fabrication. Il contient :</p>
+    <ul>
+      <li>Les informations de bridage (origines expliquées en langage opérateur, hauteur de cales)</li>
+      <li>La révision du plan — indispensable pour vérifier la conformité</li>
+      <li>Les dimensions brut et fini — pour vérifier la matière avant de commencer</li>
+      <li>La séquence des opérations lisible sans entrer dans les labels</li>
+      <li>Les cotes à contrôler à chaque M1</li>
+      <li>Les DL et DR réels validés en production</li>
+    </ul>
+
+    <p>Avec ces éléments, un opérateur qui n'a jamais vu la pièce peut brider, lancer, contrôler et reprendre sur incident — sans appel téléphonique, sans perte de temps, sans risque de pièce au rebut.</p>
+
+    <h2>L'optimisation systémique : voir au-delà de la pièce</h2>
+    <p>Un technicien d'usinage pense à la pièce du jour. Un technicien méthodes pense au système de production. La différence est fondamentale.</p>
+
+    <p>Chaque décision de programmation a des conséquences qui dépassent la pièce en cours :</p>
+
+    <table class="compare-table">
+      <tr><th>Décision</th><th>Impact immédiat</th><th>Impact systémique</th></tr>
+      <tr><td>Organiser par outil au lieu de par face</td><td>Programme plus long à rédiger</td><td>28 changements d'outils en moins par pièce — économie sur temps machine, usure cône de broche, variateurs, huile, électricité</td></tr>
+      <tr><td>Passer de bavurage en fin de programme</td><td>2 opérations supplémentaires</td><td>Suppression de l'intervention manuelle — économie temps opérateur, reproductibilité</td></tr>
+      <tr><td>Documenter les M1 avec la cote</td><td>Quelques secondes de saisie</td><td>L'opérateur sait exactement quoi contrôler — zéro appel, zéro incertitude</td></tr>
+      <tr><td>Passes Z explicites vs REP</td><td>Programme plus verbeux</td><td>Reprise sur incident depuis n'importe quelle profondeur — pièce sauvée, temps machine économisé</td></tr>
+    </table>
+
+    <h2>Ce que la FAO ne remplace pas</h2>
+    <p>Dans de nombreux ateliers, l'argument est "la FAO fait ça automatiquement". C'est partiellement vrai — la FAO génère des trajectoires. Mais elle ne fait pas :</p>
+    <ul>
+      <li>Le choix de placer le trou de fil EDM dans le rayon pour éviter les marques</li>
+      <li>La décision de garder l'outil en broche pour toutes les faces avant de le changer</li>
+      <li>La documentation des origines en langage opérateur</li>
+      <li>La gestion du talon en OP2 par fraisage latéral pour éviter la chute de copeau</li>
+      <li>Le diagnostic d'une incompatibilité entre un programme reçu et votre machine</li>
+      <li>La détection d'une erreur de révision de plan dans un programme fourni</li>
+      <li>L'adaptation thermique après un arrêt machine long</li>
+      <li>La contestation d'une mesure MMT incohérente avec des contrôles au palmer</li>
+    </ul>
+
+    <p>La FAO est un outil. Comme CimcoEdit est un outil. C'est celui qui tient l'outil qui fait la différence — pas l'outil lui-même.</p>
+
+    <h2>Le coût réel d'un programme non optimisé</h2>
+    <p>Voici un exemple concret, chiffres réels, sur une série de 25 pièces complexes 5 axes en aluminium :</p>
+
+    <table class="compare-table">
+      <tr><th>Paramètre</th><th>Valeur</th></tr>
+      <tr><td>Temps prévu en fiche de production</td><td>3h45 par pièce</td></tr>
+      <tr><td>Temps réel avec programme optimisé</td><td>1h50 par pièce</td></tr>
+      <tr><td>Gain par pièce</td><td>1h55 — soit 51% de réduction</td></tr>
+      <tr><td>Gain sur 25 pièces</td><td>47h55 de temps machine économisées</td></tr>
+    </table>
+
+    <p>Ce gain vient uniquement de l'optimisation du programme — pas d'une machine plus rapide, pas d'outils plus chers, pas d'un changement de matière. Juste de la façon dont le programme est construit.</p>
+
+    <div class="ok">✅ 47h55 économisées sur 25 pièces = presque 2 jours de production récupérés sans investissement matériel.</div>
+
+    <h2>Ce qu'on attend d'un technicien d'usinage vs ce que certains apportent</h2>
+    <p>Ce qu'on attend d'un technicien d'usinage : exécuter les programmes fournis, sortir les pièces, signaler les problèmes.</p>
+
+    <p>Ce que certains techniciens apportent réellement : analyser les programmes fournis et identifier leurs erreurs, reconstruire depuis zéro quand nécessaire, optimiser la stratégie d'usinage, documenter pour les suivants, diagnostiquer les problèmes de métrologie, gérer les incidents machine, adapter le bridage, anticiper les problèmes de production avant qu'ils arrivent.</p>
+
+    <p>La différence entre les deux profils n'est pas une question de diplôme ou de formation — c'est une question de façon d'aborder le métier. Est-ce qu'on pense à la pièce du jour ou au système de production dans son ensemble ?</p>
+
+    <h2>La transmission des connaissances</h2>
+    <p>Le savoir terrain — les conventions de programmation, les stratégies d'usinage, les décisions qui ne s'écrivent pas dans les manuels — disparaît quand les personnes qui le détiennent partent. C'est pour ça que ce forum existe.</p>
+
+    <p>Pas de théorie. Pas de tutoriels génériques. Des connaissances validées en production, sur de vraies pièces, sur de vraies machines, avec de vrais problèmes résolus.</p>
+
+  </div>
+  <div class="article-nav">
+    <a href="realite-programmes-fournis.html">← Les programmes qu'on vous fournit</a>
+    <a href="ia-et-usinage.html">IA et usinage →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

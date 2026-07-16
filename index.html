@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nom de code : TNC</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrapper header-inner">
+    <div class="logo">Nom de code : <span>TNC</span></div>
+    <nav>
+      <a href="index.html">Accueil</a>
+      <a href="categorie-programmation.html">Programmation</a>
+      <a href="categorie-strategie.html">Stratégies</a>
+      <a href="categorie-realite.html">Réalité terrain</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <div class="wrapper">
+    <div class="hero">
+      <h1>Nom de code : <span>TNC</span></h1>
+      <p>Programmation Heidenhain TNC 426, stratégies d'usinage 3 et 5 axes, conventions de documentation, réalité des ateliers — par un technicien d'usinage avec 30 ans de pratique sur DMU 70 et DMU 50.</p>
+      <div class="badge">⚙️ Connaissances validées en production — pas de théorie sans résultat</div>
+    </div>
+
+    <div class="section-title">Catégories</div>
+    <div class="cat-grid">
+      <a href="categorie-programmation.html" class="cat-card">
+        <div class="cat-icon">📋</div>
+        <h2>Programmation Heidenhain TNC 426</h2>
+        <p>Structure des programmes, architecture LBL, Q-paramètres, conventions de commentaires, macros CimcoEdit, sécurité 3 axes et 5 axes.</p>
+        <div class="cat-count">7 articles</div>
+      </a>
+      <a href="categorie-strategie.html" class="cat-card">
+        <div class="cat-icon">🔧</div>
+        <h2>Stratégies d'usinage</h2>
+        <p>Contour extérieur, organisation des opérations par outil, gestion du talon en OP2, fraisage de rainures profondes, trou de fil EDM, bavurage.</p>
+        <div class="cat-count">6 articles</div>
+      </a>
+      <a href="categorie-realite.html" class="cat-card">
+        <div class="cat-icon">🏭</div>
+        <h2>Réalité terrain</h2>
+        <p>Ce que les manuels ne disent pas — diagnostic des programmes fournis, vision du métier, retour d'expérience sur l'intelligence artificielle en atelier.</p>
+        <div class="cat-count">3 articles</div>
+      </a>
+    </div>
+
+    <div class="section-title">Tous les articles</div>
+    <div class="article-list">
+      <a href="articles/en-tete-programme.html" class="article-item"><div class="icon">📄</div><div><h3>L'en-tête de programme : la base d'un programme lisible</h3><p>Ce qu'il faut systématiquement documenter avant la première ligne de code machine.</p><div class="tags"><span class="tag accent">Programmation</span><span class="tag">Documentation</span></div></div></a>
+      <a href="articles/architecture-lbl.html" class="article-item"><div class="icon">🏗️</div><div><h3>Architecture LBL : organiser un programme Heidenhain</h3><p>Convention complète des labels — dégagements, annulation plan, inclinaison, opérations. Différences 3 axes / 5 axes.</p><div class="tags"><span class="tag accent">Programmation</span><span class="tag">LBL</span><span class="tag">5 axes</span></div></div></a>
+      <a href="articles/commentaires-documentation.html" class="article-item"><div class="icon">💬</div><div><h3>Commentaires et documentation dans un programme CN</h3><p>Commenter un CALL LBL, documenter un M1, nommer les opérations pour que n'importe qui puisse reprendre.</p><div class="tags"><span class="tag accent">Programmation</span><span class="tag">Documentation</span></div></div></a>
+      <a href="articles/passes-z-reprise-incident.html" class="article-item"><div class="icon">🔄</div><div><h3>Passes Z explicites vs CALL LBL REP : pourquoi choisir</h3><p>Reprise sur incident, portabilité machine, lisibilité — les critères pour choisir.</p><div class="tags"><span class="tag accent">Programmation</span><span class="tag">Sécurité</span></div></div></a>
+      <a href="articles/securite-3axes-5axes.html" class="article-item"><div class="icon">🛡️</div><div><h3>Sécurité programme : 3 axes vs 5 axes</h3><p>Les labels de dégagement et de sécurité ne se construisent pas de la même façon.</p><div class="tags"><span class="tag accent">Programmation</span><span class="tag">5 axes</span></div></div></a>
+      <a href="articles/macros-cimco.html" class="article-item"><div class="icon">⚡</div><div><h3>Macros CimcoEdit : organisation et passage de paramètres</h3><p>Architecture bibliothèque de macros, variables locales, convention MACRO000–MACRO231, PREPROG DMU70.</p><div class="tags"><span class="tag accent">Programmation</span><span class="tag">CimcoEdit</span></div></div></a>
+      <a href="articles/organisation-par-outil.html" class="article-item"><div class="icon">🔩</div><div><h3>Organiser les opérations par outil plutôt que par face</h3><p>Gains concrets sur le temps machine, l'usure et le réglage.</p><div class="tags"><span class="tag accent">Stratégie</span><span class="tag">5 axes</span></div></div></a>
+      <a href="articles/strategie-contour.html" class="article-item"><div class="icon">✏️</div><div><h3>Stratégie d'usinage du contour extérieur</h3><p>Réduction progressive du rayon, même tourteau pour surfaçage et ébauche, passes DR progressives en finition.</p><div class="tags"><span class="tag accent">Stratégie</span><span class="tag">Contour</span></div></div></a>
+      <a href="articles/gestion-talon-op2.html" class="article-item"><div class="icon">🪛</div><div><h3>Gestion du talon en OP2 : éliminer la zone en porte-à-faux</h3><p>Fraisage latéral avec le rayon du tourteau — sans intervention manuelle, sans risque de choc.</p><div class="tags"><span class="tag accent">Stratégie</span><span class="tag">OP2</span></div></div></a>
+      <a href="articles/trou-fil-edm.html" class="article-item"><div class="icon">🎯</div><div><h3>Positionner le trou de fil EDM dans un rayon</h3><p>Trajet minimal, trace d'entrée sur zone non fonctionnelle.</p><div class="tags"><span class="tag accent">Stratégie</span><span class="tag">EDM</span></div></div></a>
+      <a href="articles/rainures-profondes.html" class="article-item"><div class="icon">📐</div><div><h3>Fraisage de rainures profondes — convention L/D et Vc</h3><p>Convention L/D terrain, Vc 70 m/min au seuil critique, stratégie ébauche + finition.</p><div class="tags"><span class="tag accent">Stratégie</span><span class="tag">Acier</span></div></div></a>
+      <a href="articles/bavurage.html" class="article-item"><div class="icon">✨</div><div><h3>Bavurage en fin de programme — méthode sans outil dédié</h3><p>Tourteau et fraise de finition avec DR gonflé — sans intervention manuelle.</p><div class="tags"><span class="tag accent">Stratégie</span><span class="tag">Finition</span></div></div></a>
+      <a href="articles/realite-programmes-fournis.html" class="article-item"><div class="icon">⚠️</div><div><h3>Les programmes qu'on vous fournit : réalité et solutions</h3><p>11 catégories de problèmes et la méthode de diagnostic systématique.</p><div class="tags"><span class="tag accent">Réalité terrain</span><span class="tag">Diagnostic</span></div></div></a>
+      <a href="articles/vision-metier.html" class="article-item"><div class="icon">🎯</div><div><h3>Ma vision du métier de technicien d'usinage</h3><p>Ce que la FAO ne remplace pas. Le coût réel d'un programme non optimisé. La valeur de la documentation.</p><div class="tags"><span class="tag accent">Réalité terrain</span><span class="tag">Vision</span></div></div></a>
+      <a href="articles/ia-et-usinage.html" class="article-item"><div class="icon">🤖</div><div><h3>Intelligence artificielle et usinage CNC : retour d'expérience</h3><p>Claude vs ChatGPT sur des cas réels. Ce qu'une IA apporte. Le projet OpenClaw.</p><div class="tags"><span class="tag accent">Réalité terrain</span><span class="tag">IA</span></div></div></a>
+    </div>
+  </div>
+</main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

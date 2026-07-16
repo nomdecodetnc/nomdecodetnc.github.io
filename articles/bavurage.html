@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Bavurage fin de programme – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-strategie.html">Stratégies</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-strategie.html">Stratégies</a><span>›</span>Bavurage</div>
+  <div class="article-header">
+    <div class="category-badge">Stratégies d'usinage</div>
+    <h1>Bavurage en fin de programme — méthode sans outil dédié</h1>
+    <div class="meta"><span>⏱ 4 min de lecture</span><span>🏷 Finition · Qualité · Bavures · DR</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>Après un usinage complet (perçages, taraudages, alésages, contournages), des bavures apparaissent inévitablement sur les arêtes des surfaces usinées. La solution classique est un outil à chanfreiner ou une intervention manuelle. Il existe une approche plus économique : utiliser les outils déjà en magasin.</p>
+
+    <h2>Le principe</h2>
+    <p>En fin de programme, après toutes les opérations, on rappelle le tourteau et la fraise de finition avec un DR légèrement gonflé. Ce DR positif place l'outil légèrement au-delà de la cote finie — il passe donc au-dessus de la surface sans enlever de matière sur la pièce, mais il accroche et élimine les bavures qui dépassent.</p>
+
+    <pre><span class="cm">* - OPERATION 59 : Surfacage (bavures)</span>
+<span class="kw">TOOL CALL</span> 1 Z S3565 F2139 DL+0.2 DR+0  <span class="cm">; tourteau avec DR normal</span>
+<span class="cm">; passe de surfaçage complet</span>
+
+<span class="cm">* - OPERATION 60 : Contournage finition (bavures)</span>
+<span class="kw">TOOL CALL</span> 24 Z S3820 F764 DL+0 DR+0.05  <span class="cm">; fraise finition avec DR légèrement gonflé</span>
+<span class="kw">CALL LBL</span> 31 <span class="cm">; contour extérieur</span></pre>
+
+    <h2>Pourquoi ça fonctionne</h2>
+    <p>Les bavures issues des perçages et taraudages débouchent sur les faces planes (surfaçage) et sur le contour extérieur (contournage). Le tourteau en surfaçage élimine tout ce qui dépasse sur la face supérieure. La fraise de contournage avec DR+ légèrement gonflé passe au-delà du contour fini et élimine les bavures sur les faces verticales.</p>
+
+    <p>La cote de la pièce n'est pas affectée : le DR gonflé empêche l'outil de toucher la surface usinée — il ne passe qu'au-dessus des bavures.</p>
+
+    <h2>Avantages</h2>
+    <ul>
+      <li>Pas d'outil supplémentaire dans le magasin</li>
+      <li>Pas de rechargement — les outils sont déjà réglés et mesurés</li>
+      <li>Opération entièrement automatique — pas d'intervention manuelle</li>
+      <li>Reproductible pièce après pièce</li>
+    </ul>
+
+    <div class="ok">✅ Cette méthode fonctionne particulièrement bien en aluminium où les bavures sont molles et s'éliminent facilement par passage d'outil.</div>
+
+    <h2>Ce qu'il faut savoir</h2>
+    <p>Le DR gonflé doit être calibré selon l'épaisseur typique des bavures. Un DR trop faible laissera les bavures les plus épaisses. Un DR trop fort risque de marquer la surface finie. En pratique, DR+0.05 à DR+0.1 est une bonne plage de départ sur aluminium.</p>
+
+    <div class="note">💡 Cette technique ne remplace pas un chanfrein programmé sur des arêtes fonctionnelles (entrées de filets, appuis de joints). Elle gère les bavures parasites issues des opérations d'usinage sur les faces non fonctionnelles.</div>
+
+  </div>
+  <div class="article-nav">
+    <a href="rainures-profondes.html">← Rainures profondes</a>
+    <a href="../index.html">Accueil →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

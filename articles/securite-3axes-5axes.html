@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Sécurité 3 axes vs 5 axes – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-programmation.html">Programmation</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-programmation.html">Programmation</a><span>›</span>Sécurité 3 axes vs 5 axes</div>
+  <div class="article-header">
+    <div class="category-badge">Programmation Heidenhain TNC 426</div>
+    <h1>Sécurité programme : différences fondamentales entre 3 axes et 5 axes</h1>
+    <div class="meta"><span>⏱ 7 min de lecture</span><span>🏷 5 axes · Dégagements · TNC 426 · Plan incliné</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>Les labels de sécurité — dégagements, annulation de plan, positionnements entre opérations — ne se construisent pas de la même façon en 3 axes et en 5 axes. Comprendre cette différence est fondamental pour programmer sans risque de collision.</p>
+
+    <h2>En 3 axes : la sécurité est simple</h2>
+    <p>En 3 axes, il n'y a pas de plan incliné. L'axe Z est toujours perpendiculaire à la table. Un dégagement Z est toujours sûr — monter en Z écarte systématiquement l'outil de la pièce.</p>
+
+    <pre><span class="cm">* - Dégagement fin d'opération 3 axes</span>
+<span class="kw">L</span> Z+100 R0 F MAX M9  <span class="cm">; monte à Z+100 — toujours sûr</span></pre>
+
+    <p>Entre deux opérations, un positionnement XY après le dégagement Z est sans risque — la pièce est en dessous et l'outil est haut.</p>
+
+    <h2>En 5 axes : la table s'incline, le Z n'est plus "haut"</h2>
+    <p>Quand la table est inclinée à B-90° (face latérale usinée), le Z machine n'est plus perpendiculaire à la surface usinée. Un simple <code>L Z+100</code> peut envoyer l'outil vers la table au lieu de s'en éloigner — selon l'orientation en cours.</p>
+
+    <p>C'est pour ça que les dégagements en 5 axes utilisent <code>M91</code> (coordonnées machine absolues) plutôt que des coordonnées de pièce.</p>
+
+    <pre><span class="cm">* - LBL 90, DEGAGEMENTS Z M91 — 5 axes</span>
+<span class="kw">LBL</span> 90
+<span class="kw">CALL LBL</span> 100       <span class="cm">; annule le plan d'usinage d'abord</span>
+<span class="kw">L</span> Z-1 R0 F MAX M91 M9  <span class="cm">; Z en coordonnées machine — toujours sûr quelle que soit l'inclinaison</span>
+<span class="kw">LBL</span> 0</pre>
+
+    <div class="warn">⚠️ Ne jamais faire un dégagement Z sans avoir annulé le plan d'usinage (CALL LBL 100) en 5 axes. Le TNC 426 calcule la trajectoire dans le repère du plan actif — une collision est possible si le plan est encore incliné.</div>
+
+    <h2>La séquence obligatoire entre deux opérations en 5 axes</h2>
+
+    <pre><span class="cm">; --- Fin de l'opération sur face B-90 ---</span>
+<span class="kw">CALL LBL</span> 90   <span class="cm">; ANNULATION PLAN, DEGAGEMENTS Z M91 M9</span>
+
+<span class="cm">; --- Positionnement axes rotatifs ---</span>
+<span class="kw">L</span> B+Q121 C+Q122 R0 F MAX  <span class="cm">; position de changement d'outil ou de repositionnement</span>
+
+<span class="cm">; --- Inclinaison pour la face suivante ---</span>
+<span class="kw">CALL LBL</span> 104  <span class="cm">; INCLINAISON PLAN : B+90, DEC X+79.107 Y-46.25 Z-10</span>
+
+<span class="cm">; --- Positionnement sécurisé hors pièce avant d'aller en zone de coupe ---</span>
+<span class="kw">L</span> X+50 Y+0 F MAX
+<span class="kw">L</span> Z+2 F MAX</pre>
+
+    <p>L'ordre est immuable : annulation → positionnement rotatif → inclinaison → positionnement XY → descente Z. Inverser les étapes crée un risque de collision.</p>
+
+    <h2>Q121 et Q122 : les paramètres de position de changement d'outil</h2>
+    <p>Q121 (angle B) et Q122 (angle C) sont des paramètres machine définis par le constructeur. Ils définissent la position des axes rotatifs pour le changement d'outil — position neutre, hors zone de bridage, accessible au changeur automatique.</p>
+
+    <pre><span class="kw">L</span> B+Q121 C+Q122 R0 F MAX  <span class="cm">; position neutre de la machine</span></pre>
+
+    <p>Ces valeurs sont lues depuis les paramètres machine et ne doivent pas être codées en dur dans le programme — si la machine change, les Q121/Q122 s'adaptent automatiquement.</p>
+
+    <h2>Cas particulier : CYCL 8 IMAGE MIROIR en OP2</h2>
+    <p>En OP2 avec la pièce retournée dans l'étau, <code>CYCL DEF 8 IMAGE MIROIR X</code> permet d'utiliser les mêmes labels de positions sans recalculer toutes les coordonnées. Le miroir s'applique à toutes les opérations jusqu'à l'annulation avec <code>CYCL DEF 8.1</code> (sans paramètre).</p>
+
+    <pre><span class="kw">CYCL DEF</span> 8.0 IMAGE MIROIR
+<span class="kw">CYCL DEF</span> 8.1 X              <span class="cm">; miroir en X activé</span>
+<span class="cm">; ... opérations ...</span>
+<span class="kw">CYCL DEF</span> 8.0 IMAGE MIROIR
+<span class="kw">CYCL DEF</span> 8.1                <span class="cm">; annulation du miroir</span></pre>
+
+    <div class="note">💡 CYCL 8 est particulièrement utile en OP2 pour les perçages et taraudages qui ont les mêmes positions relatives par rapport à la pièce, mais dans une orientation X inversée après retournement.</div>
+
+    <h2>Récapitulatif des différences</h2>
+    <table class="compare-table">
+      <tr><th>Aspect</th><th>3 axes</th><th>5 axes</th></tr>
+      <tr><td>Dégagement Z</td><td>L Z+100 F MAX — toujours sûr</td><td>L Z-1 F MAX M91 après CALL LBL 100</td></tr>
+      <tr><td>Annulation plan</td><td>Non nécessaire</td><td>Obligatoire avant tout dégagement</td></tr>
+      <tr><td>Entre opérations</td><td>Dégagement Z + positionnement XY</td><td>LBL 90 → B+Q121 C+Q122 → LBL 10x → XY → Z</td></tr>
+      <tr><td>Labels d'infrastructure</td><td>LBL dégagement simple</td><td>LBL 90/91/92 dégagements + LBL 100 annulation + LBL 101-108 inclinaisons</td></tr>
+      <tr><td>CYCL 8 miroir</td><td>Rarement nécessaire</td><td>Utile en OP2 pour retournement</td></tr>
+    </table>
+
+  </div>
+  <div class="article-nav">
+    <a href="passes-z-reprise-incident.html">← Passes Z et reprise</a>
+    <a href="macros-cimco.html">Macros CimcoEdit →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

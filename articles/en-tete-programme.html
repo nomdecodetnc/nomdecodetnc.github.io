@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>L'en-tête de programme – Nom de code : TNC</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+
+<header>
+  <div class="wrapper header-inner">
+    <div class="logo">Nom de code : <span>TNC</span></div>
+    <nav>
+      <a href="../index.html">Accueil</a>
+      <a href="../categorie-programmation.html">Programmation</a>
+      <a href="../categorie-strategie.html">Stratégies</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+<div class="wrapper">
+<article class="article-page">
+
+  <div class="breadcrumb">
+    <a href="../index.html">Accueil</a>
+    <span>›</span>
+    <a href="../categorie-programmation.html">Programmation</a>
+    <span>›</span>
+    L'en-tête de programme
+  </div>
+
+  <div class="article-header">
+    <div class="category-badge">Programmation Heidenhain TNC 426</div>
+    <h1>L'en-tête de programme : la base d'un programme lisible</h1>
+    <div class="meta">
+      <span>⏱ 5 min de lecture</span>
+      <span>🏷 TNC 426 · DMU 70 · Documentation</span>
+    </div>
+  </div>
+
+  <div class="article-body">
+
+    <p>Un programme sans en-tête est un programme muet. Si un opérateur le retrouve dans 2 ans, il sera incapable de savoir quelle pièce il usine, quel est son système d'origines, si le brut est suffisant ou comment brider la pièce. L'en-tête résout tous ces problèmes en 30 secondes de lecture.</p>
+
+    <h2>Ce que doit contenir un en-tête</h2>
+
+    <p>Voici la structure minimale validée en production sur DMU 70 / TNC 426. Chaque champ a sa raison d'être.</p>
+
+    <pre><span class="cm">; Date: 15/07/2026</span>
+<span class="cm">;</span>
+<span class="cm">; Machine: DMU-70</span>
+<span class="cm">; Pro: 27032               &lt;-- numéro interne de l'affaire</span>
+<span class="cm">; Designation: CORPS SW</span>
+<span class="cm">; Client: MAUNA KEA TECHNOLOGIES</span>
+<span class="cm">; Plan: 322-0504 REV:A08   &lt;-- révision du plan obligatoire</span>
+<span class="cm">; Creation:</span>
+<span class="cm">; Modification:</span>
+<span class="cm">;</span>
+<span class="cm">; OP programme/usinage: 1</span>
+<span class="cm">; Dimention Brut:  114X84X48</span>
+<span class="cm">; Dimention Fini:  112.107X83X40</span>
+<span class="cm">;</span>
+<span class="cm">; Origine Z: DESSUS PIECE</span>
+<span class="cm">; Origine X: BUTER GAUCHE (quand mors fixe est au fond)</span>
+<span class="cm">; Origine Y: MORS FIXE</span>
+<span class="cm">;</span>
+<span class="cm">; Hauteur de cales:</span>
+<span class="cm">;</span>
+<span class="kw">BLK FORM</span> 0.1 Z X-0 Y-0 Z-40
+<span class="kw">BLK FORM</span> 0.2 X+112.107 Y+83 Z+7
+<span class="cm">;</span>
+<span class="kw">CYCL DEF</span> <span class="cy">247</span> INIT. PT DE REF. ~
+  Q339=<span class="nm">16</span>   <span class="cm">;NUMERO POINT DE REF.</span></pre>
+
+    <h2>Analyse champ par champ</h2>
+
+    <h3>Révision du plan</h3>
+    <p>C'est le champ le plus critique. Un programme A07 utilisé sur une pièce A08 produit des pièces non conformes. Sans la révision, il est impossible de savoir si le programme est à jour ou obsolète.</p>
+
+    <div class="warn">⚠️ Ne jamais mettre en production un programme sans vérifier que sa révision correspond au plan actuel. En cas de doute, relire le plan et comparer les cotes critiques.</div>
+
+    <h3>Dimensions brut ET fini</h3>
+    <p>Les deux sont nécessaires. Le brut permet de vérifier avant de commencer si la matière disponible est suffisante. Le fini permet de comprendre ce que le programme est censé produire sans ouvrir le plan.</p>
+
+    <h3>Origine expliquée en langage opérateur</h3>
+    <p>C'est le point le plus souvent négligé. Écrire <code>X0 Y0 CENTRE PIECE</code> oblige l'opérateur à faire un calcul mental. Écrire <code>BUTER GAUCHE (quand mors fixe est au fond)</code> lui dit exactement où pointer sans ambiguïté.</p>
+
+    <div class="ok">✅ Règle : l'origine doit être compréhensible par un opérateur qui n'a jamais vu la pièce, sans avoir à ouvrir le plan.</div>
+
+    <h3>Hauteur de cales</h3>
+    <p>Si la pièce est bridée sur cales, leur hauteur détermine la position Z0. Ce champ, même vide, rappelle à l'opérateur de vérifier ce paramètre.</p>
+
+    <h3>CYCL 247 — Initialisation du point de référence</h3>
+    <p>Toujours mettre un <code>CYCL DEF 247</code> en début de programme avec le numéro du point de référence utilisé. Cela garantit que le programme travaille dans le bon référentiel, même si quelqu'un a modifié la table entre temps.</p>
+
+    <pre><span class="kw">CYCL DEF</span> <span class="cy">247</span> INIT. PT DE REF. ~
+  Q339=<span class="nm">16</span>   <span class="cm">;NUMERO POINT DE REF.</span></pre>
+
+    <h2>Ce que l'absence d'en-tête provoque</h2>
+
+    <table class="compare-table">
+      <tr>
+        <th>Situation</th>
+        <th>Sans en-tête</th>
+        <th>Avec en-tête complet</th>
+      </tr>
+      <tr>
+        <td>Reprise après arrêt long</td>
+        <td>L'opérateur doit retrouver le plan, identifier la révision, recalculer les origines</td>
+        <td>30 secondes de lecture suffisent</td>
+      </tr>
+      <tr>
+        <td>Programme passé à un collègue</td>
+        <td>Appel inévitable pour savoir comment brider</td>
+        <td>Le collègue bride seul</td>
+      </tr>
+      <tr>
+        <td>Révision de plan</td>
+        <td>Impossible de savoir si le programme est à jour sans comparer cote par cote</td>
+        <td>La révision est visible immédiatement</td>
+      </tr>
+      <tr>
+        <td>Mauvais brut en stock</td>
+        <td>Découverte au premier coup d'outil</td>
+        <td>Détection avant de commencer</td>
+      </tr>
+    </table>
+
+    <h2>En-tête pour l'OP2 — particularités</h2>
+
+    <p>En OP2 la pièce est retournée. L'origine X change de côté. Il faut l'indiquer explicitement pour éviter les erreurs de prise d'origine.</p>
+
+    <pre><span class="cm">; Origine X: BUTER DROITE (quand mors fixe est au fond)</span>
+<span class="cm">; Origine Y: MORS FIXE</span>
+<span class="cm">; Origine Z: DESSUS PIECE</span></pre>
+
+    <p>Si la même convention "BUTER GAUCHE" est utilisée en OP1 et en OP2 sans précision, un opérateur peut pointer du mauvais côté et casser la pièce.</p>
+
+    <div class="note">💡 En 5 axes avec retournement, ajouter également <code>CYCL DEF 8 IMAGE MIROIR</code> si applicable, et l'indiquer dans l'en-tête pour que l'opérateur sache que le programme gère le miroir automatiquement.</div>
+
+  </div>
+
+  <div class="article-nav">
+    <a href="../index.html">← Accueil</a>
+    <a href="architecture-lbl.html">Architecture LBL →</a>
+  </div>
+
+</article>
+</div>
+</main>
+
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body>
+</html>

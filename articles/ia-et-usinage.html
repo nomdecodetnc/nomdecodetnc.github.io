@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>IA et usinage CNC – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-realite.html">Réalité terrain</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-realite.html">Réalité terrain</a><span>›</span>IA et usinage CNC</div>
+  <div class="article-header">
+    <div class="category-badge">Réalité terrain</div>
+    <h1>Intelligence artificielle et usinage CNC : retour d'expérience terrain</h1>
+    <div class="meta"><span>⏱ 10 min de lecture</span><span>🏷 IA · Claude · ChatGPT · Heidenhain · Automatisation</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>Les IA génératives (ChatGPT, Claude, Grok et autres) sont utilisées de plus en plus dans les contextes professionnels techniques. En tant que technicien d'usinage avec 30 ans d'expérience sur Heidenhain, j'ai testé plusieurs IA sur des cas réels et concrets. Voici mes conclusions.</p>
+
+    <h2>Comment j'ai testé</h2>
+    <p>Le critère n'est pas "est-ce que l'IA connaît le TNC 426" — toutes ont des connaissances générales sur Heidenhain. Le critère est :</p>
+    <ul>
+      <li>Est-ce qu'elle identifie correctement une erreur dans un programme réel ?</li>
+      <li>Est-ce qu'elle comprend un raisonnement technique et le valide ou le corrige ?</li>
+      <li>Est-ce qu'elle est capable de reconnaître qu'elle s'est trompée quand je la corrige ?</li>
+      <li>Est-ce qu'elle maintient la cohérence technique sur une longue conversation ?</li>
+      <li>Est-ce qu'elle peut rédiger des documents formels (rapport technique, argumentaire) à partir d'informations techniques que je lui fournis ?</li>
+    </ul>
+
+    <h2>ChatGPT : des connaissances générales, une fiabilité insuffisante</h2>
+    <p>ChatGPT a des connaissances sur Heidenhain TNC — cycles, Q-paramètres, structure de base. Sur des questions génériques, les réponses sont correctes.</p>
+
+    <p>Les problèmes apparaissent sur des cas spécifiques :</p>
+    <ul>
+      <li>Quand on lui soumet un programme réel avec des erreurs, il ne les identifie pas toutes et parfois génère des fausses erreurs</li>
+      <li>Quand on le corrige sur un point technique, il acquiesce sans toujours comprendre pourquoi la correction est juste</li>
+      <li>Sur des sujets techniques pointus (comportement d'un CYCL 8 en combinaison avec CYCL 19, gestion des Q121/Q122, comportement du CYCL 247), les réponses sont approximatives</li>
+      <li>La cohérence technique se dégrade sur les longues conversations — il "oublie" des points établis et se contredit</li>
+    </ul>
+
+    <h2>Claude : raisonnement critique et cohérence technique</h2>
+    <p>Ce qui distingue Claude dans une utilisation technique intensive :</p>
+
+    <h3>Il se trompe — et le reconnaît clairement</h3>
+    <p>Sur plusieurs points j'ai corrigé Claude pendant nos échanges — sur le R12 que j'avais prétendu être dans le contour de la pièce (il n'y était pas), sur le rôle du serrage thermique, sur la signification de certaines mesures. À chaque fois la correction a été acceptée, intégrée, et les raisonnements suivants ont été cohérents avec la correction. Pas de résistance ego, pas de "j'avais raison quand même".</p>
+
+    <h3>Il pose les bonnes questions</h3>
+    <p>Sur un programme qu'il ne comprend pas entièrement, Claude demande des précisions plutôt que d'inventer une explication. C'est un comportement critique en technique — l'incertitude avouée vaut mieux que la certitude fausse.</p>
+
+    <h3>Il maintient la cohérence sur de longues sessions</h3>
+    <p>Nous avons travaillé sur l'analyse d'un programme 5 axes complexe pendant plusieurs heures. Claude a maintenu la cohérence du raisonnement du début à la fin — se référant aux points établis précédemment, intégrant les corrections au fil de la conversation.</p>
+
+    <h3>Il produit des documents exploitables</h3>
+    <p>Les rapports techniques, comparaisons de programmes, argumentaires de négociation — produits conjointement dans nos échanges — sont directement utilisables professionnellement. Pas besoin de réécrire entièrement.</p>
+
+    <h2>Ce qu'une IA ne remplace pas</h2>
+    <p>Être clair sur les limites est aussi important qu'apprécier les capacités :</p>
+    <ul>
+      <li>Une IA ne peut pas sentir les vibrations d'un outil qui commence à brûler</li>
+      <li>Elle ne voit pas le copeau changer de couleur</li>
+      <li>Elle n'entend pas la machine changer de son</li>
+      <li>Elle ne peut pas décider en temps réel d'arrêter un usinage qui part mal</li>
+      <li>Elle n'a pas 30 ans d'expérience accumulée sur des centaines de pièces différentes</li>
+    </ul>
+
+    <p>L'IA est un outil de raisonnement, de documentation et de formalisation — pas un remplacement de l'expertise terrain.</p>
+
+    <h2>Mes attentes pour une IA en atelier</h2>
+    <p>Pour être réellement utile dans mon métier, une IA doit :</p>
+
+    <ul>
+      <li><strong>Comprendre la syntaxe Heidenhain TNC 426 nativement</strong> — pas juste les grands principes, les détails qui comptent en production</li>
+      <li><strong>Analyser un programme réel et identifier les anomalies</strong> — erreurs de syntaxe, incompatibilités, erreurs géométriques</li>
+      <li><strong>Raisonner sur la stratégie d'usinage</strong> — pas juste répondre à des questions, mais comprendre pourquoi un choix est meilleur qu'un autre</li>
+      <li><strong>Rédiger des documents techniques formels</strong> — rapports, comparaisons, argumentaires</li>
+      <li><strong>Maintenir la cohérence sur des sessions longues</strong> — ne pas perdre le fil d'un raisonnement complexe</li>
+      <li><strong>Reconnaître ses limites et ses erreurs</strong> — la fiabilité passe par l'honnêteté sur l'incertitude</li>
+    </ul>
+
+    <h2>Le projet d'automatisation locale — OpenClaw</h2>
+    <p>La dépendance aux IA cloud (connexion internet requise, disponibilité du service, restrictions d'accès potentielles) est un risque pour un usage professionnel intensif. J'ai donc initié un projet d'infrastructure IA locale pour l'atelier :</p>
+
+    <ul>
+      <li><strong>Matériel</strong> : Raspberry Pi 5 (8 Go RAM, SSD NVMe 128 Go) — héberge le système localement</li>
+      <li><strong>LLM local</strong> : Ollama — exécute un modèle de langage sur le Pi sans connexion internet</li>
+      <li><strong>Base de connaissances RAG</strong> : ChromaDB — indexe tous les programmes .H de l'atelier et la documentation Heidenhain pour une recherche sémantique rapide</li>
+      <li><strong>Interface</strong> : bot Telegram + dashboard web — accessible depuis smartphone en atelier</li>
+      <li><strong>Backend cloud</strong> : API Claude en secours pour les requêtes complexes qui dépassent le LLM local</li>
+    </ul>
+
+    <p>L'objectif final : un assistant qui connaît l'historique de toutes les pièces usinées, peut analyser un nouveau programme .H automatiquement dès qu'il apparaît dans le dossier de transfert, et peut répondre à "quelle Vc on avait utilisée sur la pièce X en 16MnCr5 ?" en quelques secondes.</p>
+
+    <h2>Pourquoi documenter ici ce retour d'expérience</h2>
+    <p>Parce que les techniciens d'usinage sont en première ligne pour tester ces outils sur des cas réels. La plupart des retours sur l'IA viennent de développeurs ou de chercheurs — pas de techniciens qui soumettent des programmes Heidenhain réels avec des bugs réels et vérifient si l'IA les trouve.</p>
+
+    <p>Ce retour d'expérience terrain, avec des critères de test concrets et des résultats honnêtes, est une contribution que je peux faire à la communauté des usineurs qui s'interroge sur l'utilité de ces outils dans leur métier.</p>
+
+  </div>
+  <div class="article-nav">
+    <a href="vision-metier.html">← Vision du métier</a>
+    <a href="../index.html">Accueil →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Programmation Heidenhain – Nom de code : TNC</title><link rel="stylesheet" href="assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="index.html">Accueil</a><a href="categorie-programmation.html">Programmation</a><a href="categorie-strategie.html">Stratégies</a></nav></div></header>
+<main><div class="wrapper">
+  <div style="margin-bottom:32px"><a href="index.html" style="color:var(--text3);font-size:13px">← Accueil</a></div>
+  <h1 style="font-size:24px;margin-bottom:8px">Programmation Heidenhain TNC 426</h1>
+  <p style="color:var(--text2);margin-bottom:32px">Structure des programmes, LBL, Q-paramètres, macros CimcoEdit, sécurité 3 et 5 axes.</p>
+  <div class="article-list">
+    <a href="articles/en-tete-programme.html" class="article-item"><div class="icon">📄</div><div><h3>L'en-tête de programme : la base d'un programme lisible</h3><p>Ce qu'il faut systématiquement documenter avant la première ligne de code machine.</p><div class="tags"><span class="tag accent">Documentation</span><span class="tag">TNC 426</span></div></div></a>
+    <a href="articles/architecture-lbl.html" class="article-item"><div class="icon">🏗️</div><div><h3>Architecture LBL : organiser un programme Heidenhain</h3><p>Convention des labels — dégagements, annulation plan, inclinaison, opérations. Différences 3 axes / 5 axes.</p><div class="tags"><span class="tag accent">LBL</span><span class="tag">5 axes</span></div></div></a>
+    <a href="articles/commentaires-documentation.html" class="article-item"><div class="icon">💬</div><div><h3>Commentaires et documentation dans un programme CN</h3><p>Commenter un CALL LBL, documenter un M1, nommer les opérations pour que n'importe qui puisse reprendre.</p><div class="tags"><span class="tag accent">Documentation</span><span class="tag">Lisibilité</span></div></div></a>
+    <a href="articles/passes-z-reprise-incident.html" class="article-item"><div class="icon">🔄</div><div><h3>Passes Z explicites vs CALL LBL REP : pourquoi choisir</h3><p>Reprise sur incident, portabilité machine, lisibilité — les critères pour choisir.</p><div class="tags"><span class="tag accent">Sécurité</span><span class="tag">Portabilité</span></div></div></a>
+    <a href="articles/securite-3axes-5axes.html" class="article-item"><div class="icon">🛡️</div><div><h3>Sécurité programme : 3 axes vs 5 axes</h3><p>Les labels de dégagement et de sécurité ne se construisent pas de la même façon. Différences et exemples.</p><div class="tags"><span class="tag accent">5 axes</span><span class="tag">Dégagements</span></div></div></a>
+    <a href="articles/macros-cimco.html" class="article-item"><div class="icon">⚡</div><div><h3>Macros CimcoEdit : organisation et passage de paramètres</h3><p>Architecture bibliothèque de macros, variables locales, convention MACRO000–MACRO231.</p><div class="tags"><span class="tag accent">CimcoEdit</span><span class="tag">Macros</span></div></div></a>
+    <a href="articles/organisation-par-outil.html" class="article-item"><div class="icon">🔩</div><div><h3>Organiser les opérations par outil plutôt que par face</h3><p>Gains concrets sur le temps machine, l'usure et le réglage.</p><div class="tags"><span class="tag accent">Optimisation</span><span class="tag">5 axes</span></div></div></a>
+  </div>
+</div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>

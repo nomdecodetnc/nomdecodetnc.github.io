@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organisation par outil – Nom de code : TNC</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrapper header-inner">
+    <div class="logo">Nom de code : <span>TNC</span></div>
+    <nav><a href="../index.html">Accueil</a><a href="../categorie-programmation.html">Programmation</a><a href="../categorie-strategie.html">Stratégies</a></nav>
+  </div>
+</header>
+<main><div class="wrapper"><article class="article-page">
+
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-strategie.html">Stratégies</a><span>›</span>Organisation par outil</div>
+
+  <div class="article-header">
+    <div class="category-badge">Stratégies d'usinage</div>
+    <h1>Organiser les opérations par outil plutôt que par face</h1>
+    <div class="meta"><span>⏱ 8 min de lecture</span><span>🏷 5 axes · Optimisation · Temps machine · Usure</span></div>
+  </div>
+
+  <div class="article-body">
+
+    <p>En usinage 5 axes multi-faces, il existe deux façons d'organiser un programme : par face (on finit toutes les opérations d'une face avant de passer à la suivante) ou par outil (on garde l'outil en broche et on fait toutes les faces qui nécessitent cet outil avant de le changer). La deuxième approche est systématiquement plus efficace.</p>
+
+    <h2>Organisation par face : le réflexe naturel</h2>
+
+    <p>La majorité des programmes générés par FAO ou écrits sans réflexion sur l'optimisation sont organisés par face. C'est logique mentalement — on "pense" la pièce face par face. Mais en production, ça génère un nombre de changements d'outils disproportionné.</p>
+
+    <p>Exemple réel sur une pièce 5 axes avec 6 faces (Corps SW, plan 322-0504) :</p>
+
+    <ul>
+      <li>Face B=0 (dessus) : T3 foret à pointer → T14 D2.8 → T15 taraud M3 → ...</li>
+      <li>Face B-90 : T3 foret à pointer → T14 D2.8 → T15 taraud M3 → ...</li>
+      <li>Face A+90 : T3 foret à pointer → T14 D2.8 → T15 taraud M3 → ...</li>
+      <li>...</li>
+    </ul>
+
+    <p>T3 (foret à pointer) est chargé et déchargé 9 fois pour pointer toutes les faces. 9 changements physiques pour le même outil.</p>
+
+    <h2>Organisation par outil : l'outil reste en broche</h2>
+
+    <p>La logique inversée : T3 est chargé une fois, tous les pointages de toutes les faces sont faits, puis T3 est déchargé définitivement. Le TNC 426 ne fait pas de changement physique si l'outil demandé est déjà en broche — même avec plusieurs TOOL CALL du même outil dans le programme.</p>
+
+    <pre><span class="cm">* - OPERATION 1 : POINTAGE face B=0</span>
+<span class="kw">TOOL CALL</span> <span class="nm">3</span> Z S2000 F100 DL+0
+<span class="cm">; ... pointages face dessus ...</span>
+
+<span class="cm">* - OPERATION 10 : POINTAGE face B-90</span>
+<span class="kw">TOOL CALL</span> <span class="nm">3</span> Z S2000 F100 DL+0   <span class="cm">; pas de changement physique — T3 déjà en broche</span>
+<span class="kw">CALL LBL</span> <span class="nm">103</span> <span class="cm">; INCLINAISON PLAN : B-90, DEC Y-16.5 Z-20</span>
+<span class="cm">; ... pointages face B-90 ...</span>
+
+<span class="cm">* - OPERATION 17 : POINTAGE face A+90</span>
+<span class="kw">TOOL CALL</span> <span class="nm">3</span> Z S2000 F100 DL+0   <span class="cm">; toujours pas de changement physique</span>
+<span class="cm">; ... pointages face A+90 ...</span></pre>
+
+    <h2>Gains concrets et mesurables</h2>
+
+    <h3>Temps machine</h3>
+    <p>Sur la pièce Corps SW : 59 changements physiques (version par face) → 31 changements (version par outil). 28 changements supprimés. À environ 15-20 secondes par changement sur DMU 70 : 7 à 9 minutes économisées par pièce. Sur une série de 25 pièces : 3 à 4 heures récupérées sans modifier une seule trajectoire.</p>
+
+    <h3>Usure machine</h3>
+    <ul>
+      <li>Cône de broche : chaque changement d'outil sollicite le mécanisme de serrage</li>
+      <li>Bras changeur : cycles mécaniques supprimés</li>
+      <li>Glissières : moins de positionnements pour le changement</li>
+      <li>Électronique : moins de cycles d'accélération/décélération des variateurs</li>
+    </ul>
+
+    <h3>Réglage</h3>
+    <p>Quand T3 est chargé une seule fois, le DL est mesuré une fois, rentré une fois, validé une fois. Dans la logique par face, T3 est rechargé après d'autres outils — une légère variation de serrage ou de mesure est possible à chaque rechargement. Moins de rechargements = moins d'occasions d'écart.</p>
+
+    <h3>Risque d'erreur</h3>
+    <p>Chaque rechargement d'outil est une occasion pour une erreur — mauvais outil, mauvais DL, mauvais DR. 28 rechargements en moins = 28 occasions en moins de faire une erreur.</p>
+
+    <h2>Comment réorganiser un programme existant</h2>
+
+    <p>La réorganisation ne touche pas aux trajectoires — uniquement à l'ordre des blocs d'opérations. La méthode :</p>
+
+    <ol>
+      <li>Identifier tous les TOOL CALL dans le programme</li>
+      <li>Regrouper par outil : toutes les opérations T3, puis toutes les T14, etc.</li>
+      <li>Pour chaque groupe, ordonner les faces dans un ordre logique (de la plus accessible à la moins accessible)</li>
+      <li>Vérifier que les CALL LBL d'inclinaison de plan sont bien présents entre chaque changement de face</li>
+    </ol>
+
+    <div class="warn">⚠️ Attention à la cohérence des opérations dépendantes : si un perçage doit être fait avant un taraudage sur la même face, ils doivent rester dans cet ordre même si on regroupe par outil. On regroupe d'abord tous les perçages (toutes faces), puis tous les taraudages (toutes faces) — jamais un taraudage avant le perçage correspondant.</div>
+
+    <h2>Cette logique vient du décolletage</h2>
+
+    <p>En décolletage sur tour multibroche ou tour automatique suisse, l'optimisation des temps de cycle est une contrainte absolue — chaque seconde de temps mort est de l'argent perdu. Les programmeurs décolletage pensent naturellement par outil, pas par face.</p>
+
+    <p>En fraisage 5 axes, cette rigueur est moins souvent appliquée — la complexité des trajectoires masque souvent l'inefficacité de l'organisation. Mais les gains sont réels et mesurables.</p>
+
+  </div>
+
+  <div class="article-nav">
+    <a href="../categorie-strategie.html">← Stratégies</a>
+    <a href="strategie-contour.html">Stratégie contour →</a>
+  </div>
+
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body>
+</html>

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gestion du talon en OP2 – Nom de code : TNC</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<header>
+  <div class="wrapper header-inner">
+    <div class="logo">Nom de code : <span>TNC</span></div>
+    <nav><a href="../index.html">Accueil</a><a href="../categorie-programmation.html">Programmation</a><a href="../categorie-strategie.html">Stratégies</a></nav>
+  </div>
+</header>
+<main><div class="wrapper"><article class="article-page">
+
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-strategie.html">Stratégies</a><span>›</span>Gestion du talon en OP2</div>
+
+  <div class="article-header">
+    <div class="category-badge">Stratégies d'usinage</div>
+    <h1>Gestion du talon en OP2 : éliminer la zone en porte-à-faux sans intervention manuelle</h1>
+    <div class="meta"><span>⏱ 7 min de lecture</span><span>🏷 OP2 · Bridage · Talon · Tourteau</span></div>
+  </div>
+
+  <div class="article-body">
+
+    <p>En OP2, la pièce est retournée dans l'étau. Si un talon a été usiné en OP1 (zone d'appui pour le bridage), une partie de ce talon se retrouve dans le vide — sans appui sous les mors. Cette situation crée un risque lors du surfaçage de la face opposée.</p>
+
+    <h2>Le problème : comprendre ce qui se passe</h2>
+
+    <p>Prenons l'exemple d'une pièce de 112×83mm avec un talon de 7.85mm d'épaisseur. En OP1, deux zones de 33×33mm sont usinées de chaque côté, créant un épaulement. En OP2, la pièce est retournée :</p>
+
+    <ul>
+      <li>Le talon repose sur les mors de l'étau</li>
+      <li>Sur les 112×83mm du talon, seules les zones au-dessus des mors (33×33mm environ) sont soutenues</li>
+      <li>La zone centrale — ici 79×50mm — est dans le vide total</li>
+    </ul>
+
+    <div class="warn">⚠️ Plus le tourteau avance et amincit le talon, plus la rigidité de la zone en porte-à-faux diminue. Quand l'épaisseur devient suffisamment faible, la dernière passe sectionne cette zone — qui peut alors chuter ou se soulever selon le sens d'usinage.</div>
+
+    <p>Si le morceau se soulève au lieu de chuter, il peut rentrer en contact avec le tourteau et provoquer un choc sur la face usinée ou un bris d'outil.</p>
+
+    <h2>La mauvaise solution : laisser faire</h2>
+
+    <p>Programmer un surfaçage simple de X+140 à X-15 en allers-retours, c'est laisser au hasard la direction de chute du morceau. Selon la position de la dernière passe, le morceau peut tomber vers l'intérieur de l'étau (contre la pièce) ou vers l'extérieur (hors de danger). C'est incontrôlable.</p>
+
+    <h2>La bonne solution : fraisage latéral au rayon du tourteau</h2>
+
+    <p>L'approche correcte divise l'opération en deux parties distinctes :</p>
+
+    <h3>Partie 1 — Éliminer la zone en porte-à-faux par fraisage latéral</h3>
+
+    <p>Le tourteau descend en dessous du niveau du talon (plus de 7.85mm) pour pouvoir utiliser son rayon en fraisage latéral. Ensuite, par passes radiales de 1mm de pénétration, il usine la zone en porte-à-faux en Y et en X.</p>
+
+    <p>Le matériau est transformé en copeaux progressivement — il n'y a jamais de morceau libre susceptible de chuter ou de se soulever. Le rayon du tourteau laisse naturellement le rayon dans les angles intérieurs correspondant à la géométrie de la pièce.</p>
+
+    <p>On s'arrête à 1 ou 2mm des cotes de 33mm pour laisser une surépaisseur sur les zones appuyées.</p>
+
+    <div class="ok">✅ À la fin de cette première partie, la zone en porte-à-faux n'existe plus. Il ne reste que de la matière soutenue par les mors.</div>
+
+    <h3>Partie 2 — Surfaçage de la face</h3>
+
+    <p>Maintenant que la zone en porte-à-faux est éliminée, le surfaçage se fait sur une pièce entièrement rigide. Pas de vibration, pas de risque de chute, surface parfaitement plane.</p>
+
+    <h2>Pourquoi pas une pré-découpe en OP1 ?</h2>
+
+    <p>La pré-découpe du talon (sectionner la zone en porte-à-faux avant le retournement) n'est pas toujours réalisable en OP1 — elle nécessite un accès au fond de la pièce que le bridage en OP1 peut ne pas permettre. C'est pour ça que la solution est en OP2, après retournement.</p>
+
+    <h2>Pourquoi pas le sens de balayage seul ?</h2>
+
+    <p>On pourrait penser que choisir le bon sens de balayage pour que le morceau tombe vers l'extérieur suffit. C'est insuffisant : le sens de chute dépend de l'épaisseur résiduelle, de la géométrie du morceau, de sa masse et de l'avance de l'outil. Un morceau de 79×50×7mm en aluminium qui se décroche n'est pas prévisible dans sa trajectoire exacte.</p>
+
+    <h2>Résumé de la stratégie</h2>
+
+    <table class="compare-table">
+      <tr><th>Étape</th><th>Outil</th><th>Action</th><th>Résultat</th></tr>
+      <tr><td>1</td><td>Tourteau</td><td>Descendre sous le niveau du talon, fraiser latéralement la zone en porte-à-faux par passes de 1mm, s'arrêter à 1-2mm des cotes appuyées</td><td>Zone en porte-à-faux éliminée en copeaux — aucun morceau libre</td></tr>
+      <tr><td>2</td><td>Tourteau</td><td>Surfacer la face normalement</td><td>Surface plane sur une pièce entièrement rigide — sans vibration</td></tr>
+    </table>
+
+    <div class="note">💡 Le rayon du tourteau dans les angles intérieurs correspond naturellement aux rayons de coin de la pièce — pas besoin d'outil supplémentaire pour les finir si le rayon est acceptable.</div>
+
+  </div>
+
+  <div class="article-nav">
+    <a href="strategie-contour.html">← Stratégie contour extérieur</a>
+    <a href="trou-fil-edm.html">Trou de fil EDM →</a>
+  </div>
+
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body>
+</html>

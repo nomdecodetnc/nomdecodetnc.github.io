@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Réalité des programmes fournis – Nom de code : TNC</title><link rel="stylesheet" href="../assets/style.css"></head>
+<body>
+<header><div class="wrapper header-inner"><div class="logo">Nom de code : <span>TNC</span></div><nav><a href="../index.html">Accueil</a><a href="../categorie-realite.html">Réalité terrain</a></nav></div></header>
+<main><div class="wrapper"><article class="article-page">
+  <div class="breadcrumb"><a href="../index.html">Accueil</a><span>›</span><a href="../categorie-realite.html">Réalité terrain</a><span>›</span>Les programmes qu'on vous fournit</div>
+  <div class="article-header">
+    <div class="category-badge">Réalité terrain</div>
+    <h1>Les programmes qu'on vous fournit : réalité et solutions</h1>
+    <div class="meta"><span>⏱ 12 min de lecture</span><span>🏷 Programmes · Incompatibilités · Diagnostic · Méthode</span></div>
+  </div>
+  <div class="article-body">
+
+    <p>Dans la réalité d'atelier, un technicien d'usinage reçoit régulièrement des programmes CN de sources externes — du client, d'un prestataire, d'un ancien opérateur. La situation la plus courante : ces programmes sont supposés fonctionner sur votre machine, et dans la pratique ils ne peuvent pas être lancés tels quels. Voici une situation réelle, anonymisée, et la méthode pour y faire face.</p>
+
+    <h2>Le contexte typique</h2>
+    <p>Vous recevez un lot de programmes pour une pièce à usiner. Sur le papier, tout est là — OP1, OP2, programmes d'outillage. En réalité, aucun ne peut être lancé directement. Voici les 11 catégories de problèmes que vous allez rencontrer :</p>
+
+    <h2>Problème 1 : Révision de plan incorrecte</h2>
+    <p>Les programmes sont écrits pour une révision du plan qui n'est plus la révision en vigueur. Entre la révision A et la révision B, des cotes ont changé, des opérations ont été ajoutées ou supprimées. Sans vérification systématique, vous usineriez des pièces non conformes au plan actuel.</p>
+
+    <div class="warn">⚠️ Toujours commencer par comparer la révision du plan dans les programmes reçus avec la révision du plan de fabrication actuel. Si elles diffèrent, les programmes sont à analyser cote par cote.</div>
+
+    <p>Ce qu'il faut vérifier en priorité :</p>
+    <ul>
+      <li>Les cotes tolérancées critiques (H7, G6, H6) — leur valeur peut avoir changé</li>
+      <li>Les rayons dans les angles — un rayon peut passer de R12 à R3 entre deux révisions</li>
+      <li>Les opérations présentes / absentes — une révision peut ajouter un alésage ou supprimer une rainure</li>
+    </ul>
+
+    <h2>Problème 2 : M-fonctions machine-spécifiques</h2>
+    <p>Les M-fonctions au-delà de M30 sont définies par le constructeur machine et varient d'une machine à l'autre. Un programme écrit pour une machine X peut contenir des <code>L M61</code> ou <code>L M62</code> qui correspondent à des fonctions inexistantes sur votre machine.</p>
+
+    <p>Sur TNC 426, si une M-fonction inconnue est rencontrée, le comportement varie selon le paramétrage machine — arrêt immédiat, erreur, ou exécution sans effet. Dans tous les cas : imprévisible.</p>
+
+    <p><strong>Solution :</strong> identifier toutes les M-fonctions non standards (M35 et au-delà) dans le programme, consulter le manuel de votre machine pour vérifier leur existence, supprimer ou remplacer celles qui sont inconnues.</p>
+
+    <h2>Problème 3 : Syntaxe incompatible avec votre version de TNC</h2>
+    <p>Certaines instructions existent sur les TNC modernes (iTNC 530, TNC 640) mais pas sur TNC 426 :</p>
+
+    <ul>
+      <li><code>F AUTO</code> — avance calculée automatiquement. Syntaxe iTNC 530+ uniquement. Erreur de syntaxe sur TNC 426.</li>
+      <li><code>Q206= AUTO</code>, <code>Q207= AUTO</code>, <code>Q209= AUTO</code> — même problème dans CYCL 230.</li>
+      <li><code>CYCL DEF 7.1 #N</code> — sélection de point zéro par numéro avec syntaxe # — peut être incompatible selon la version firmware.</li>
+    </ul>
+
+    <p><strong>Solution :</strong> rechercher systématiquement <code>AUTO</code> et <code>#</code> dans les programmes reçus. Remplacer chaque <code>F AUTO</code> par la valeur d'avance correspondant à l'outil. Remplacer les <code>CYCL DEF 7.1 #N</code> par <code>CYCL DEF 247</code>.</p>
+
+    <h2>Problème 4 : TOOL CALL sans numéro d'outil</h2>
+    <p>Un bug de programmation classique : <code>TOOL CALL  Z S1500 F80</code> sans numéro d'outil. Aucune machine ne peut interpréter ça correctement — soit erreur, soit chargement d'un outil aléatoire.</p>
+
+    <p>Ce type d'erreur passe inaperçu à la relecture rapide. Il faut chercher méthodiquement tous les TOOL CALL dans le programme et vérifier que chacun a un numéro d'outil.</p>
+
+    <pre><span class="cm">; ❌ Bug : TOOL CALL sans numéro</span>
+<span class="kw">TOOL CALL</span>  Z S1500 F80
+
+<span class="cm">; ✅ Correct :</span>
+<span class="kw">TOOL CALL</span> 14 Z S1500 F80</pre>
+
+    <h2>Problème 5 : Noms de sous-programmes incorrects</h2>
+    <p>Un CALL PGM appelle un sous-programme par son nom de fichier. Si le fichier fourni s'appelle <code>SOUS-PROG-OP1.H</code> et que le programme principal fait <code>CALL PGM SOUS-PROG.H</code>, la machine s'arrête avec "programme introuvable".</p>
+
+    <p>Vérifier également que les extensions sont complètes (<code>.H</code> obligatoire sur TNC 426 — certains programmes omettent l'extension).</p>
+
+    <h2>Problème 6 : Sous-programmes FAO illisibles</h2>
+    <p>Les programmes d'ébauche générés par FAO (surfaçage, évidement) sont souvent fournis comme sous-programmes séparés — des milliers de lignes de trajectoires calculées par logiciel, sans en-tête, sans TOOL CALL, sans gestion d'origine.</p>
+
+    <p>Ces fichiers posent deux problèmes :</p>
+    <ul>
+      <li>Ils supposent que la machine est déjà dans le bon référentiel quand ils sont appelés</li>
+      <li>Ils sont souvent en coordonnées machine de la machine d'origine — incompatibles avec votre système d'origine</li>
+    </ul>
+
+    <p><strong>Solution :</strong> ne pas utiliser ces sous-programmes FAO. Reconstruire les opérations d'ébauche en programmation native — c'est souvent plus rapide à programmer et infiniment plus rapide à l'usinage car les trajectoires natives sont optimisées sans à-vide inutile.</p>
+
+    <h2>Problème 7 : Erreurs géométriques dans les contours</h2>
+    <p>Des erreurs directement dans les cotes du contour programmé — une face à Y-100 au lieu de Y-83, par exemple. Ces erreurs passent au chargement du programme mais produisent une pièce hors cote ou une collision.</p>
+
+    <p><strong>Solution :</strong> comparer systématiquement les cotes de contour du programme avec le plan avant le premier lancement. En particulier les cotes globales (largeur, hauteur totale) et les cotes tolérancées.</p>
+
+    <h2>Problème 8 : Instructions de desserrage manuel en cours d'usinage</h2>
+    <p>Des STOP dans le programme avec instructions de desserrer et resserrer la pièce manuellement entre deux opérations. C'est parfois nécessaire techniquement, mais dans la pratique :</p>
+    <ul>
+      <li>Toute reprise de bridage introduit un risque de décalage</li>
+      <li>Le "serrage gentil pour ne pas écraser la pièce" est une consigne subjective — non reproductible d'un opérateur à l'autre</li>
+      <li>Incompatible avec une production série reproductible</li>
+    </ul>
+
+    <h2>Problème 9 : Table outils différente</h2>
+    <p>Les numéros d'outils dans les programmes reçus correspondent à la table outils de la machine d'origine. Si T14 chez eux est une fraise D10 et que T14 chez vous est un foret D3, vous avez un problème majeur.</p>
+
+    <p><strong>Solution :</strong> identifier tous les TOOL CALL, construire la table de correspondance (leur numéro → leur outil → votre numéro), remplacer systématiquement avant tout essai.</p>
+
+    <h2>Problème 10 : Origine différente</h2>
+    <p>Les programmes reçus utilisent souvent une origine au centre de la pièce. Si vous travaillez avec une origine sur le bord, toutes les coordonnées sont à convertir. Ce n'est pas une erreur — c'est une incompatibilité de convention.</p>
+
+    <h2>Problème 11 : Opérations manquantes</h2>
+    <p>Le programme reçu ne contient pas toutes les opérations. Des taraudages absents, des chanfreins oubliés, une opération prévue "au fil EDM" fournie comme programme de reprise en fraisage avec serrage intermédiaire manuel — non applicable en production série.</p>
+
+    <h2>Méthode de diagnostic avant premier lancement</h2>
+    <p>Face à un lot de programmes inconnus, voici la séquence à suivre avant de mettre quoi que ce soit en machine :</p>
+
+    <ol>
+      <li><strong>Vérifier la révision du plan</strong> dans chaque programme vs le plan actuel</li>
+      <li><strong>Rechercher les M-fonctions</strong> non standards et les identifier</li>
+      <li><strong>Rechercher "AUTO"</strong> — chaque occurrence est une incompatibilité potentielle</li>
+      <li><strong>Vérifier tous les TOOL CALL</strong> — chacun doit avoir un numéro</li>
+      <li><strong>Vérifier tous les CALL PGM</strong> — chaque fichier appelé doit exister avec le bon nom et la bonne extension</li>
+      <li><strong>Comparer les cotes de contour</strong> avec le plan — toutes les cotes globales et tolérancées</li>
+      <li><strong>Construire la table de correspondance des outils</strong></li>
+      <li><strong>Vérifier l'origine</strong> et la convertir si nécessaire</li>
+      <li><strong>Identifier les opérations manquantes</strong> par comparaison avec le plan</li>
+    </ol>
+
+    <div class="ok">✅ Ce diagnostic complet prend du temps mais évite de mettre une pièce au rebut ou d'endommager la machine. Il est systématique, pas optionnel.</div>
+
+    <h2>La vraie solution : reconstruire depuis zéro</h2>
+    <p>Après ce diagnostic, la question se pose souvent : vaut-il mieux corriger les programmes reçus ou repartir d'une feuille blanche ?</p>
+
+    <p>La réponse dépend du volume de corrections. Si le programme a 3 ou 4 problèmes localisés, la correction est rapide. Si les incompatibilités sont nombreuses, si la révision est incorrecte, si les origines sont différentes et si des opérations manquent — reconstruire depuis le plan est souvent plus rapide et plus fiable. Un programme reconstruit sur la bonne révision, dans le bon référentiel, avec les bonnes conventions, sera meilleur que le programme original corrigé à la hâte.</p>
+
+    <p>La reconstruction complète permet aussi d'optimiser l'usinage — organisation par outil, circuit continu sans à-vide, documentation complète — ce qu'un programme corrigé ne permettra jamais d'atteindre.</p>
+
+  </div>
+  <div class="article-nav">
+    <a href="../categorie-realite.html">← Réalité terrain</a>
+    <a href="vision-metier.html">Vision du métier →</a>
+  </div>
+</article></div></main>
+<footer><div class="wrapper">Nom de code : TNC — Connaissances terrain validées en production</div></footer>
+</body></html>
